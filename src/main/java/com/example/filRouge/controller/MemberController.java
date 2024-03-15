@@ -6,6 +6,7 @@ import com.example.filRouge.controller.vm.member.response.responseMember;
 import com.example.filRouge.entities.Member;
 import com.example.filRouge.entities.Role;
 import com.example.filRouge.service.memberService.MemberService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @RestController
@@ -30,7 +33,7 @@ public class MemberController {
 
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/")
-    public ResponseEntity<?> addMember(@Valid  @RequestBody() requestMember requestmember) {
+    public ResponseEntity<?> addMember(@Valid  @RequestBody() requestMember requestmember) throws MessagingException, IOException {
             Member member=modelMapper.map(requestmember,Member.class);
             return ResponseEntity.ok(memberService.create(member));
     }
