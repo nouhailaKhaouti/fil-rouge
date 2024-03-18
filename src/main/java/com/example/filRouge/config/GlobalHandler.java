@@ -6,12 +6,18 @@ import com.example.filRouge.exception.CustomException;
 import com.example.filRouge.exception.DateValidationException;
 import com.example.filRouge.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,5 +63,39 @@ public class GlobalHandler {
     @ExceptionHandler(LockedException.class)
     public ResponseEntity<?> handleLockedError(LockedException e){
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    ProblemDetail handleAccessDeniedException(Exception ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), ex.getMessage());
+        problemDetail.setProperty("access_denied", "Unauthorized Failure");
+        return problemDetail;
+    }
+    @ExceptionHandler({BadCredentialsException.class})
+    ProblemDetail handleAuthenticationException(Exception ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401), ex.getMessage());
+        problemDetail.setProperty("bad_credentials", "Username or password is incorrect.");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(InsufficientAuthenticationException.class)
+    ProblemDetail handleInsufficientAuthenticationException(InsufficientAuthenticationException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401), ex.getMessage());
+        problemDetail.setProperty("credentials", "Login credentials are missing.");
+        return problemDetail;
+    }
+
+//    @ExceptionHandler(Exception.class)
+//    ProblemDetail handleOtherException(Exception ex) {
+//        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), ex.getMessage());
+//        problemDetail.setProperty("server", "A server internal error occurs.");
+//        return problemDetail;
+//    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    ProblemDetail handleNoHandlerFoundException(NoHandlerFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), ex.getMessage());
+        problemDetail.setProperty("API", "This API endpoint is not found.");
+        return problemDetail;
     }
 }

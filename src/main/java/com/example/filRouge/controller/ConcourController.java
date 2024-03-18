@@ -1,28 +1,43 @@
 package com.example.filRouge.controller;
 
 
+import com.example.filRouge.controller.vm.concour.ResponseConcour;
 import com.example.filRouge.controller.vm.concour.requestConcour;
 import com.example.filRouge.entities.Concour;
 import com.example.filRouge.service.concourService.concourService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("FilRouge/api/concour")
+@PreAuthorize("hasRole('MANAGER')")
 public class ConcourController {
     final private concourService concourService;
 
     final ModelMapper modelMapper;
 
+    @GetMapping("/")
+    public ResponseEntity<?> getAllConcours() {
+        List<Concour> concours = concourService.findAll();
+        return new ResponseEntity<>(concours.stream().map(f->modelMapper.map(f, ResponseConcour.class)).toList(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{reference}")
+    public ResponseEntity<?> getConcours(@PathVariable("reference") String reference) {
+        Concour concours = concourService.findByReference(reference);
+        return new ResponseEntity<>(modelMapper.map(concours, ResponseConcour.class), HttpStatus.OK);
+    }
+
     @PostMapping("/")
-    public ResponseEntity<?> addConcour(@Valid @RequestBody() requestConcour concour) {
+    public ResponseEntity<?> addConcour( @RequestBody() requestConcour concour) {
         Concour concour1=modelMapper.map(concour, Concour.class);
         return ResponseEntity.ok(concourService.saveConcourComplet(concour1));
     }

@@ -27,6 +27,7 @@ public class requestMember {
     @NotBlank(message = "the location can't be blank")
     private String identityNumber;
     private String email;
-    private String password;
+
+    private boolean accountApproved;
 
 }

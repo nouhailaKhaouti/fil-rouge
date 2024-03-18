@@ -47,7 +47,9 @@ public class MemberServiceImpl implements MemberService {
             member.setAccessionDate(LocalDate.now());
             member.setPassword(password);
             member.setPassword(passwordEncoder.encode(member.getPassword()));
-            member.setRole(Role.STUDENT);
+            if(member.getRole()==null) {
+                member.setRole(Role.STUDENT);
+            }
             Member savedUser=memberRepository.save(member);
             var jwtToken = jwtService.generateToken(member);
             var refreshToken = jwtService.generateRefreshToken(member);
@@ -166,9 +168,11 @@ public class MemberServiceImpl implements MemberService {
     public Member findByNum(Integer num){
         return memberRepository.findMemberByNum(num);
     }
+
     @Override
     public void delete(Member member) {
-         memberRepository.delete(member);
+         Member member1=findByNum(member.getNum());
+         memberRepository.delete(member1);
     }
 
     @Override

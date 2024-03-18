@@ -76,13 +76,10 @@ public class MemberController {
     }
 
     @PreAuthorize("hasRole('MANAGER')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteMember(@PathVariable("id") long id) {
-
-            Member member=new Member();
-            member.setId(id);
+    @DeleteMapping("/{num}")
+    public ResponseEntity<?> deleteMember(@PathVariable("num") Integer num) {
+            Member member= Member.builder().num(num).build();
             memberService.delete(member);
-
             return new ResponseEntity<>(HttpStatus.OK);
     }
 
