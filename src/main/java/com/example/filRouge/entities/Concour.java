@@ -16,21 +16,21 @@ import static jakarta.persistence.TemporalType.DATE;
 @NoArgsConstructor
 @Builder
 public class Concour {
-    @OneToMany(mappedBy = "concour")
+    @OneToMany(mappedBy = "concour",cascade = CascadeType.REMOVE)
     private List<Module> modules;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String reference;
-    private int anneeConcours;
+    private Integer anneeConcours;
     @Temporal(DATE)
     private LocalDate dateConcoursEcrit;
     @Temporal(DATE)
     private LocalDate dateConcoursOral;
-    private int nbreplace;
-    private int nbreplaceConcoursEcrit;
-    private int nbreplaceConcoursOral;
+    private Integer nbreplace;
+    private Integer nbreplaceConcoursEcrit;
+    private Integer nbreplaceConcoursOral;
 
     @ManyToOne
     private Filiere filiere;

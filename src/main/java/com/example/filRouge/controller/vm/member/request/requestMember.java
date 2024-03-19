@@ -9,22 +9,22 @@ import lombok.Data;
 public class requestMember {
     private Integer num;
 
-    @NotNull(message = "the location can't be null")
-    @NotBlank(message = "the location can't be blank")
+    @NotNull(message = "the name field can't be null")
+    @NotBlank(message = "the name field can't be blank")
     private String name;
 
 /*    @NotNull(message = "the location can't be null")
     @NotBlank(message = "the location can't be blank")*/
     private String familyName;
 
-    @NotNull(message = "the location can't be null")
-    @NotBlank(message = "the location can't be blank")
+    @NotNull(message = "the user nationality can't be null")
+    @NotBlank(message = "the user nationality can't be blank")
     private String nationality;
 
     private Member.IdentityDocumentType identityDocument;
 
-    @NotNull(message = "the location can't be null")
-    @NotBlank(message = "the location can't be blank")
+    @NotNull(message = "the identity Number can't be null")
+    @NotBlank(message = "the identity Number can't be blank")
     private String identityNumber;
     private String email;
 

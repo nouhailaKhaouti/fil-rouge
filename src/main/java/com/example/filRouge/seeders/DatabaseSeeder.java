@@ -1,8 +1,11 @@
 package com.example.filRouge.seeders;
 
 import com.example.filRouge.entities.Concour;
+import com.example.filRouge.entities.Member;
 import com.example.filRouge.entities.Module;
+import com.example.filRouge.entities.Role;
 import com.example.filRouge.service.concourService.concourService;
+import com.example.filRouge.service.memberService.MemberService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -22,6 +25,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     final FiliereSeeder filiereSeeder;
     final ConcourSeeder concourSeeder;
     final concourService concourService;
+    final MemberService memberService;
     @Override
     public void run(String... args) throws MessagingException, IOException {
          memberSeeder.seedMemberData();
@@ -29,8 +33,8 @@ public class DatabaseSeeder implements CommandLineRunner {
          filiereSeeder.seedFilieres();
          concourSeeder.seedConcours();
 
-/*        Member member= Member.builder().num(1237832).role(Role.MANAGER).password("Baouboula").email("jaouralive70@gmail.com").accountApproved(true).name("nouhaila").build();
-        memberService.create(member);*/
+        Member member= Member.builder().num(1237832).role(Role.MANAGER).password("Baouboula").email("jaouralive70@gmail.com").accountApproved(true).name("nouhaila").build();
+        memberService.create(member);
 
 /*        List<Module> moduleList = new ArrayList<>();
         moduleList.add(Module.builder().reference("test").build());

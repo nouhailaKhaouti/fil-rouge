@@ -54,9 +54,10 @@ public class concourServiceImpl implements concourService{
         if(c.isPresent()){
             throw new AlreadyExistException();
         }
-            concourRepository.save(concours);
-            concours.getModules().forEach(module -> {
-                module.setConcour(concours);
+            concours.setFiliere(filiereService.findByLabel(concours.getFiliere().getLabel()));
+            Concour concoursNew=concourRepository.save(concours);
+            concoursNew.getModules().forEach(module -> {
+                module.setConcour(concoursNew);
                 moduleService.saveModule(module);
             });
 
@@ -64,7 +65,7 @@ public class concourServiceImpl implements concourService{
     }
 
     @Override
-    public List<Concour> findByAnneeConcour(int anneeConcour) {
+    public List<Concour> findByAnneeConcour(Integer anneeConcour) {
         return concourRepository.findByAnneeConcours(anneeConcour);
     }
 

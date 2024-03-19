@@ -13,7 +13,7 @@ public interface concourService {
 
     public Concour findByReference(String reference);
 
-    public List<Concour> findByAnneeConcour(int anneeConcour);
+    public List<Concour> findByAnneeConcour(Integer anneeConcour);
 
     List<Concour> findByRefFiliere(Filiere Filiere);
 

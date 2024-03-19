@@ -2,21 +2,18 @@ package com.example.filRouge.controller;
 
 import com.example.filRouge.controller.vm.departement.DepartementVm;
 import com.example.filRouge.entities.Departement;
-import com.example.filRouge.entities.Role;
+
 import com.example.filRouge.service.departementSevice.departementService;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.List;
 
 
 @RestController
@@ -29,6 +26,11 @@ public class DepartementController {
 
     final ModelMapper modelMapper;
 
+    @GetMapping("/")
+    public ResponseEntity<?> getAllDepartements() {
+        List<Departement> departements = departementService.findAll();
+        return new ResponseEntity<>(departements.stream().map(f->modelMapper.map(f, DepartementVm.class)).toList(), HttpStatus.OK);
+    }
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/")
     public ResponseEntity<?> addDepartement(@Valid  @RequestBody() DepartementVm requestdepartement)  {

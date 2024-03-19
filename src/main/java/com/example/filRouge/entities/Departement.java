@@ -1,10 +1,10 @@
 package com.example.filRouge.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
+
 @Entity
 
 @Setter
@@ -18,4 +18,6 @@ public class Departement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String label;
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<Filiere> filieres;
 }

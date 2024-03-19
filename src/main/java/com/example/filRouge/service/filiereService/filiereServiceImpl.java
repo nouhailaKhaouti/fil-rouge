@@ -4,6 +4,7 @@ import com.example.filRouge.Repository.FiliereRepository;
 import com.example.filRouge.entities.Filiere;
 import com.example.filRouge.exception.AlreadyExistException;
 import com.example.filRouge.exception.NotFoundException;
+import com.example.filRouge.service.departementSevice.departementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class filiereServiceImpl implements filiereService{
     final private FiliereRepository filiereRepository;
+    final private departementService departementService;
     @Override
     public Filiere create(Filiere filiere) {
-        if(filiereRepository.findByLabel(filiere.getLabel()).isEmpty()){
-            filiereRepository.save(filiere);
+
+        if(filiereRepository.findByLabelAndDepartement(filiere.getLabel(),departementService.findByLabel(filiere.getDepartement())).isEmpty()){
+            return filiereRepository.save(filiere);
         }
         throw new AlreadyExistException();
     }
@@ -28,7 +31,7 @@ public class filiereServiceImpl implements filiereService{
         if(optionalFiliere.isPresent()){
             if(filiereRepository.findByLabel(filiere.getLabel()).isEmpty()){
                 optionalFiliere.get().setLabel(filiere.getLabel());
-                filiereRepository.save(optionalFiliere.get());
+                return filiereRepository.save(optionalFiliere.get());
             }
             throw new AlreadyExistException();
         }
@@ -37,7 +40,11 @@ public class filiereServiceImpl implements filiereService{
 
     @Override
     public void delete(Filiere filiere) {
-        filiereRepository.delete(filiere);
+        if(filiereRepository.findByLabelAndDepartement(filiere.getLabel(),departementService.findByLabel(filiere.getDepartement())).isPresent()){
+            filiereRepository.delete(findByLabel(filiere.getLabel()));
+        }
+
+        throw new NotFoundException();
     }
 
     @Override

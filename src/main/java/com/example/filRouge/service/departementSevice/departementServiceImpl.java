@@ -17,7 +17,7 @@ public class departementServiceImpl implements departementService{
     @Override
     public Departement create(Departement departement) {
         if(departementRepository.findByLabel(departement.getLabel()).isEmpty()){
-            departementRepository.save(departement);
+            return departementRepository.save(departement);
         }
         throw new AlreadyExistException();
     }

@@ -28,7 +28,7 @@ public class ModuleController {
     @PostMapping("/")
     public ResponseEntity<?> addModule(@Valid @RequestBody() requestModule requestModule){
         Module module=modelMapper.map(requestModule,Module.class);
-        module.setConcour(concourService.findByReference(requestModule.getReference()));
+        module.setConcour(concourService.findByReference(requestModule.getConcour().getReference()));
         return ResponseEntity.ok(moduleService.saveModule(module));
     }
 
