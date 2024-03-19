@@ -37,12 +37,22 @@ public class departementServiceImpl implements departementService{
 
     @Override
     public void delete(Departement departement) {
+        departement=findByLabel(departement);
         departementRepository.delete(departement);
     }
 
     @Override
     public Optional<Departement> findById(Departement departement) {
         return departementRepository.findById(departement.getId());
+    }
+
+    @Override
+    public Departement findByLabel(Departement departement) {
+        Optional<Departement> optionalDepartement=departementRepository.findByLabel(departement.getLabel());
+        if(optionalDepartement.isEmpty()){
+            throw new NotFoundException();
+        }
+        return optionalDepartement.get();
     }
 
     @Override

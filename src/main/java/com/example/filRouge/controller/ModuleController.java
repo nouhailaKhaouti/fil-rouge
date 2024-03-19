@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("FilRouge/api/member")
+@RequestMapping("FilRouge/api/module")
 @PreAuthorize("hasRole('MANAGER')")
 public class ModuleController {
 

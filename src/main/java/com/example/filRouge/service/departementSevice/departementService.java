@@ -15,5 +15,7 @@ public interface departementService {
 
     Optional<Departement> findById(Departement departement);
 
+    Departement findByLabel(Departement departement);
+
     List<Departement> findAll();
 }
