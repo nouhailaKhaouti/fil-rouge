@@ -5,6 +5,7 @@ import com.example.filRouge.entities.Choix;
 import com.example.filRouge.exception.AlreadyExistException;
 import com.example.filRouge.exception.CustomException;
 import com.example.filRouge.exception.NotFoundException;
+import com.example.filRouge.service.concourService.concourService;
 import com.example.filRouge.service.semestreService.SemestreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChoixServiceImpl implements ChoixService {
     final private ChoixRepository choixRepository;
+    final private concourService concourService;
     @Override
     public Choix create(Choix choix) {
         if(choixRepository.findByInscriptionAndConcour(choix.getInscription(),choix.getConcour())!=null) {
@@ -24,8 +26,8 @@ public class ChoixServiceImpl implements ChoixService {
         if(choixRepository.countChoixByInscription(choix.getInscription())>3){
             throw new CustomException("you can have more then three choices", HttpStatus.BAD_REQUEST);
         }
+        choix.setConcour(concourService.findByReference(choix.getConcour().getReference()));
         return choixRepository.save(choix);
-
     }
 
 /*    @Override

@@ -4,6 +4,8 @@ import com.example.filRouge.Repository.InscriptionRepository;
 import com.example.filRouge.entities.Inscription;
 import com.example.filRouge.exception.AlreadyExistException;
 import com.example.filRouge.exception.NotFoundException;
+import com.example.filRouge.service.choixService.ChoixService;
+import com.example.filRouge.service.diplomeService.DiplomeService;
 import com.example.filRouge.service.semestreService.SemestreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InscriptionServiceImpl implements InscriptionService {
     final private InscriptionRepository inscriptionRepository;
-    final private SemestreService semestreService;
+    final private ChoixService choixService;
+    final private DiplomeService diplomeService;
     @Override
     public Inscription create(Inscription inscription) {
         List<Inscription> inscriptionList=inscriptionRepository.findByCinAndNiveau(inscription.getCin(),inscription.getNiveau());
@@ -28,9 +31,19 @@ public class InscriptionServiceImpl implements InscriptionService {
             } );
         }
             Inscription inscriptionnew=inscriptionRepository.save(inscription);
+            if(inscriptionnew.getChoixs()!=null){
+                inscriptionnew.getChoixs().forEach(choix -> {
+                    choix.setInscription(inscriptionnew);
+                    choixService.create(choix);
+                });
+            }
+            if(inscriptionnew.getDiplomes()!=null){
+                inscriptionnew.getDiplomes().forEach(diplome -> {
+                    diplome.setInscription(inscriptionnew);
+                    diplomeService.create(diplome);
+                });
+            }
             return inscriptionnew;
-
-
     }
 
 /*    @Override
