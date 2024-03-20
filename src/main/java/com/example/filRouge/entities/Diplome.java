@@ -16,7 +16,7 @@ public class Diplome {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
-    private String refDiplome;
+    private DiplomeName refDiplome;
     private Integer anneeObtention;
     private String mention;
     private Double note;
