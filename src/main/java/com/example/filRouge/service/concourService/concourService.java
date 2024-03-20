@@ -19,7 +19,7 @@ public interface concourService {
 
     public List<Concour> findAll();
 
-    public List<Concour> findByCreteria(String reference, String refFiliere, String anneeConcour);
+    public List<Concour> findByCreteria(String refFiliere, Integer anneeConcour);
 
     Concour updateConcour(Concour concours);
 }

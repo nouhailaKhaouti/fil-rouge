@@ -11,4 +11,6 @@ public class requestModule {
     @NotBlank(message = "the reference can't be blank")
     private String reference;
     private concourWithReferenceOnly concour;
+
+    private Integer coef;
 }

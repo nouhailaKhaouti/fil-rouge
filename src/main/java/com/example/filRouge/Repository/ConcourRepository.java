@@ -11,8 +11,8 @@ import java.util.Optional;
 @Repository
 public interface ConcourRepository extends JpaRepository<Concour, Long> {
 
-    List<Concour> findByReferenceAndFiliereAndAnneeConcours(String reference, Filiere filiere,int annee);
-    List<Concour> findByReferenceAndAnneeConcours(String reference,int annee);
+    List<Concour> findByFiliereAndAnneeConcours(Filiere filiere,Integer annee);
+    List<Concour> findByReferenceAndAnneeConcours(String reference,Integer annee);
     Optional<Concour> findByReference(String reference);
     List<Concour> findByFiliere(Filiere filiere);
     List<Concour> findByAnneeConcours(int anneeConcours);

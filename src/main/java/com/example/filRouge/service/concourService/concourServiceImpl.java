@@ -4,12 +4,16 @@ import com.example.filRouge.Repository.ConcourRepository;
 import com.example.filRouge.entities.Concour;
 import com.example.filRouge.entities.Filiere;
 import com.example.filRouge.exception.AlreadyExistException;
+import com.example.filRouge.exception.CustomException;
+import com.example.filRouge.exception.DateValidationException;
 import com.example.filRouge.exception.NotFoundException;
 import com.example.filRouge.service.filiereService.filiereService;
 import com.example.filRouge.service.moduleservice.moduleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,14 +58,31 @@ public class concourServiceImpl implements concourService{
         if(c.isPresent()){
             throw new AlreadyExistException();
         }
-            concours.setFiliere(filiereService.findByLabel(concours.getFiliere().getLabel()));
-            Concour concoursNew=concourRepository.save(concours);
-            concoursNew.getModules().forEach(module -> {
-                module.setConcour(concoursNew);
-                moduleService.saveModule(module);
-            });
 
-        return concours;
+        List<Concour> concourList=findByCreteria(concours.getFiliere().getLabel(),concours.getAnneeConcours());
+        concourList.forEach(concour -> {
+            if(concours.getNiveau().equals(concour.getNiveau())) {
+                if (concours.getDateConcoursEcrit().isAfter(concour.getDateConcoursEcrit()) &&
+                        concours.getDateConcoursEcrit().isBefore(concour.getDateConcoursOral())) {
+                    throw new CustomException("It look like there's an other exam  ", HttpStatus.BAD_REQUEST);
+                }
+            }
+        });
+
+        if(concours.getDateConcoursEcrit().isAfter(LocalDate.now().plusDays(7)) ){
+            if(concours.getDateConcoursEcrit().isAfter(concours.getDateConcoursOral())) {
+                concours.setFiliere(filiereService.findByLabel(concours.getFiliere().getLabel()));
+                Concour concoursNew = concourRepository.save(concours);
+                concoursNew.getModules().forEach(module -> {
+                    module.setConcour(concoursNew);
+                    moduleService.saveModule(module);
+                });
+
+                return concours;
+            }
+            throw new CustomException("the oral exam day can't be before the writing exam Date", HttpStatus.BAD_REQUEST);
+        }
+        throw new DateValidationException();
     }
 
     @Override
@@ -70,19 +91,13 @@ public class concourServiceImpl implements concourService{
     }
 
     @Override
-    public List<Concour> findByCreteria(String reference, String refFiliere, String anneeConcour) {
-        if(reference!=null && anneeConcour!=null) {
-
+    public List<Concour> findByCreteria(String refFiliere, Integer anneeConcour) {
+        if(anneeConcour!=null) {
             if(refFiliere!=null){
                 Filiere filiere=filiereService.findByLabel(refFiliere);
-                return concourRepository.findByReferenceAndFiliereAndAnneeConcours(reference, filiere, Integer.parseInt(anneeConcour));
+                return concourRepository.findByFiliereAndAnneeConcours(filiere, anneeConcour);
             }
-            return concourRepository.findByReferenceAndAnneeConcours(reference, Integer.parseInt(anneeConcour));
-
-        } else if (reference!=null) {
-            return List.of(findByReference(reference));
-        } else if (anneeConcour!=null) {
-            return findByAnneeConcour(Integer.parseInt(anneeConcour));
+            return findByAnneeConcour(anneeConcour);
         }
         return findAll();
     }
