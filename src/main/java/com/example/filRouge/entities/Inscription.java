@@ -30,12 +30,14 @@ public class Inscription {
     private String nom;
     private String prenom;
     private String cin;
-    private Long tel;
+    private String tel;
     private String email;
-    private String niveau;
+    private Niveau niveau;
     private String AdressePersonnelle;
     private String statue;
     @Temporal(DATE)
     private LocalDate dateNaissance;
+    @Temporal(DATE)
+    private LocalDate createdAt;
 
 }

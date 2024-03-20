@@ -78,7 +78,7 @@ public class concourServiceImpl implements concourService{
                     moduleService.saveModule(module);
                 });
 
-                return concours;
+                return concoursNew;
             }
             throw new CustomException("the oral exam day can't be before the writing exam Date", HttpStatus.BAD_REQUEST);
         }

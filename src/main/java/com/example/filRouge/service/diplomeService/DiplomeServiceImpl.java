@@ -4,6 +4,7 @@ import com.example.filRouge.Repository.DiplomeRepository;
 import com.example.filRouge.entities.Diplome;
 import com.example.filRouge.exception.AlreadyExistException;
 import com.example.filRouge.exception.NotFoundException;
+import com.example.filRouge.service.semestreService.SemestreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DiplomeServiceImpl implements DiplomeService {
     final private DiplomeRepository diplomeRepository;
+    final private SemestreService semestreService;
     @Override
     public Diplome create(Diplome diplome) {
         if(diplomeRepository.findByRefDiplomeAndInscription(diplome.getRefDiplome(),diplome.getInscription()).isEmpty()){
-            return diplomeRepository.save(diplome);
+
+            Diplome diplomenew=diplomeRepository.save(diplome);
+            diplomenew.getSemestres().forEach(semestre -> {
+                semestre.setDiplome(diplomenew);
+                semestreService.create(semestre);
+            });
+            return diplomenew;
         }
         throw new AlreadyExistException();
     }
