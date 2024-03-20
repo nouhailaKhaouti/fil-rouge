@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface SemestreRepository extends JpaRepository<Semestre, Long> {
 
     List<Semestre> findByDiplome(Diplome diplome);
-    Optional<Semestre> findByRefSemestreAAndDiplome(String reference,Diplome diplome);
+    Optional<Semestre> findByRefSemestreAndDiplome(String reference,Diplome diplome);
 }

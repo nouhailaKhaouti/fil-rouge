@@ -16,7 +16,7 @@ public class SemestreServiceImpl implements SemestreService {
     final private SemestreRepository semestreRepository;
     @Override
     public Semestre create(Semestre semestre) {
-        if(semestreRepository.findByRefSemestreAAndDiplome(semestre.getRefSemestre(),semestre.getDiplome()).isEmpty()){
+        if(semestreRepository.findByRefSemestreAndDiplome(semestre.getRefSemestre(),semestre.getDiplome()).isEmpty()){
             return semestreRepository.save(semestre);
         }
         throw new AlreadyExistException();
@@ -48,7 +48,7 @@ public class SemestreServiceImpl implements SemestreService {
 
     @Override
     public Semestre findByRef(Semestre semestre) {
-        Optional<Semestre> optionalSemestre=semestreRepository.findByRefSemestreAAndDiplome(semestre.getRefSemestre(),semestre.getDiplome());
+        Optional<Semestre> optionalSemestre=semestreRepository.findByRefSemestreAndDiplome(semestre.getRefSemestre(),semestre.getDiplome());
         if(optionalSemestre.isEmpty()){
             throw new NotFoundException();
         }
