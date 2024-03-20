@@ -30,11 +30,18 @@ public class InscriptionServiceImpl implements InscriptionService {
                 }
             } );
         }
-            Inscription inscriptionnew=inscriptionRepository.save(inscription);
+
+        inscription.setCreatedAt(LocalDate.now());
+        Inscription inscriptionnew=inscriptionRepository.save(inscription);
+
+        final Integer[] i = {1};
+
             if(inscriptionnew.getChoixs()!=null){
                 inscriptionnew.getChoixs().forEach(choix -> {
                     choix.setInscription(inscriptionnew);
+                    choix.setNumChoix(i[0]);
                     choixService.create(choix);
+                    i[0]++;
                 });
             }
             if(inscriptionnew.getDiplomes()!=null){

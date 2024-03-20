@@ -18,5 +18,5 @@ public class Semestre {
     @ManyToOne(cascade = CascadeType.REMOVE)
     private Diplome diplome;
     private String refSemestre;
-    private double note;
+    private Double note;
 }
