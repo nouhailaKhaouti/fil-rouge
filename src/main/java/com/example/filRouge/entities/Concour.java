@@ -28,9 +28,16 @@ public class Concour {
     private LocalDate dateConcoursEcrit;
     @Temporal(DATE)
     private LocalDate dateConcoursOral;
+
+    @Temporal(DATE)
+    private LocalDate createdAt;
+
     private Integer nbreplace;
     private Integer nbreplaceConcoursEcrit;
     private Integer nbreplaceConcoursOral;
+
+    @ManyToOne
+    private Member createdBY;
 
     @ManyToOne
     private Filiere filiere;
