@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,6 +23,9 @@ public class ChoixServiceImpl implements ChoixService {
     @Override
     public Choix create(Choix choix) {
         Concour concour=concourService.findByReference(choix.getConcour().getReference());
+        if(LocalDate.now().isAfter(concour.getDateConcoursEcrit().minusDays(3))){
+            throw  new CustomException("you can't register , the deathline is over", HttpStatus.BAD_REQUEST);
+        }
         if(choixRepository.findByInscriptionAndConcour(choix.getInscription(),concour)!=null) {
             throw new AlreadyExistException();
         }
@@ -33,7 +37,6 @@ public class ChoixServiceImpl implements ChoixService {
         if(choixRepository.countChoixByInscription(choix.getInscription())>3){
             throw new CustomException("you can't have more then three choices", HttpStatus.BAD_REQUEST);
         }
-        choix.setConcour(concourService.findByReference(choix.getConcour().getReference()));
         return choixRepository.save(choix);
     }
 

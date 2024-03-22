@@ -19,4 +19,7 @@ public class Choix {
     private Inscription inscription;
     @ManyToOne
     private Concour concour;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Result result;
 }

@@ -1,13 +1,17 @@
 package com.example.filRouge.service.inscriptionService;
 
 import com.example.filRouge.Repository.InscriptionRepository;
+import com.example.filRouge.entities.Concour;
 import com.example.filRouge.entities.Inscription;
 import com.example.filRouge.exception.AlreadyExistException;
+import com.example.filRouge.exception.CustomException;
 import com.example.filRouge.exception.NotFoundException;
 import com.example.filRouge.service.choixService.ChoixService;
+import com.example.filRouge.service.concourService.concourService;
 import com.example.filRouge.service.diplomeService.DiplomeService;
 import com.example.filRouge.service.semestreService.SemestreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,6 +26,9 @@ public class InscriptionServiceImpl implements InscriptionService {
     final private DiplomeService diplomeService;
     @Override
     public Inscription create(Inscription inscription) {
+
+
+
         List<Inscription> inscriptionList=inscriptionRepository.findByCinAndNiveau(inscription.getCin(),inscription.getNiveau());
         if(inscriptionList!=null){
             inscriptionList.forEach(inscription1->{
