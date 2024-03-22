@@ -1,16 +1,14 @@
 package com.example.filRouge.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class NoteModule {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

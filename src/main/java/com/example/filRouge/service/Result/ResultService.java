@@ -15,8 +15,17 @@ public interface ResultService {
 
     public Result updateResult(Result result);
 
+    Result updateResultOral(Result result);
+
+    Result preselectionResult(Result result);
+
+    Result writingResult(Result result);
+
+    Result admisResult(Result result);
+
+    Result addModuleNote(Result result);
+
     public void DeleteResult(Result result);
 
-    public Result DeleteResultById(Long id);
 
 }
