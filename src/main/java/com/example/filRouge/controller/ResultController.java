@@ -1,19 +1,17 @@
 package com.example.filRouge.controller;
 
 
-import com.example.filRouge.controller.vm.concour.ResponseConcour;
-import com.example.filRouge.controller.vm.concour.requestConcour;
+
 import com.example.filRouge.controller.vm.result.resultRequest;
 import com.example.filRouge.controller.vm.result.resultRequestWithOralNote;
 import com.example.filRouge.controller.vm.result.updateResult;
 import com.example.filRouge.entities.*;
 import com.example.filRouge.service.Result.ResultService;
 import com.example.filRouge.service.choixService.ChoixService;
-import com.example.filRouge.service.concourService.concourService;
 import com.example.filRouge.service.inscriptionService.InscriptionService;
+
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("FilRouge/api/concour")
+@RequestMapping("FilRouge/api/result")
 @PreAuthorize("hasRole('MANAGER')")
 public class ResultController {
     final private ResultService resultService;
@@ -56,26 +54,42 @@ public class ResultController {
     }
 
     @PutMapping("/preselection")
-    public ResponseEntity<?> updatePreselection( @RequestBody() updateResult resultRequest) {
-        Result result=modelMapper.map(resultRequest, Result.class);
-        return ResponseEntity.ok(resultService.preselectionResult(searchResult(result)));
+    public ResponseEntity<?> updatePreselection( @RequestBody() List<updateResult> resultRequest) {
+        resultRequest.stream().map(f->modelMapper.map(f, Result.class)).forEach(
+                f->{
+                    resultService.preselectionResult(searchResult(f));
+                }
+        );
+        return ResponseEntity.ok(resultRequest);
     }
 
-    @PutMapping("/{note}")
+    @PutMapping("/oral")
     public ResponseEntity<?> updateOralNote( @RequestBody() resultRequestWithOralNote resultRequest) {
         Result result=modelMapper.map(resultRequest, Result.class);
         return ResponseEntity.ok(resultService.updateResultOral(searchResult(result)));
     }
     @PutMapping("/writing")
-    public ResponseEntity<?> updateWriting( @RequestBody() updateResult resultRequest) {
-        Result result=modelMapper.map(resultRequest, Result.class);
-        return ResponseEntity.ok(resultService.writingResult(searchResult(result)));
+    public ResponseEntity<?> updateWriting(@RequestBody List<updateResult> resultRequest){
+
+        // Perform the result updates
+        resultRequest.stream()
+                .map(f -> modelMapper.map(f, Result.class))
+                .forEach(f -> resultService.writingResult(searchResult(f)));
+
+
+
+        // Return the response
+        return ResponseEntity.ok(resultRequest);
     }
 
     @PutMapping("/admis")
-    public ResponseEntity<?> updateAdmis( @RequestBody() updateResult resultRequest) {
-        Result result=modelMapper.map(resultRequest, Result.class);
-        return ResponseEntity.ok(resultService.admisResult(searchResult(result)));
+    public ResponseEntity<?> updateAdmis( @RequestBody() List<updateResult>  resultRequest) {
+        resultRequest.stream().map(f->modelMapper.map(f, Result.class)).forEach(
+                f->{
+                    resultService.admisResult(searchResult(f));
+                }
+        );
+        return ResponseEntity.ok(resultRequest);
     }
 
     public Result searchResult(Result result){
