@@ -3,6 +3,7 @@ package com.example.filRouge.service.concourService;
 import com.example.filRouge.Repository.ConcourRepository;
 import com.example.filRouge.entities.Concour;
 import com.example.filRouge.entities.Filiere;
+import com.example.filRouge.entities.Niveau;
 import com.example.filRouge.exception.AlreadyExistException;
 import com.example.filRouge.exception.CustomException;
 import com.example.filRouge.exception.DateValidationException;
@@ -31,7 +32,12 @@ public class concourServiceImpl implements concourService{
 
     @Override
     public List<Concour> findByRefFiliere(Filiere Filiere) {
-        return concourRepository.findByFiliere(Filiere);
+        return concourRepository.findByFiliere(filiereService.findByLabel(Filiere.getLabel()));
+    }
+
+    @Override
+    public List<Concour> findByRefFiliereAndNiveau(Filiere Filiere, Niveau niveau) {
+        return concourRepository.findByFiliereAndNiveau(filiereService.findByLabel(Filiere.getLabel()),niveau);
     }
 
     @Override

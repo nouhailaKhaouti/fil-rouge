@@ -32,9 +32,8 @@ public class DatabaseSeeder implements CommandLineRunner {
          departementSeeder.seedDepartements();
          filiereSeeder.seedFilieres();
          concourSeeder.seedConcours();
-/*
         Member member= Member.builder().num(1237832).role(Role.MANAGER).password("Baouboula").email("jaouralive70@gmail.com").accountApproved(true).name("nouhaila").build();
-        memberService.create(member);*/
+        memberService.create(member);
 
 /*        List<Module> moduleList = new ArrayList<>();
         moduleList.add(Module.builder().reference("test").build());

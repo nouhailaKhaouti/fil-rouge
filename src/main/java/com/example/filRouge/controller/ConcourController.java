@@ -4,6 +4,8 @@ package com.example.filRouge.controller;
 import com.example.filRouge.controller.vm.concour.ResponseConcour;
 import com.example.filRouge.controller.vm.concour.requestConcour;
 import com.example.filRouge.entities.Concour;
+import com.example.filRouge.entities.Filiere;
+import com.example.filRouge.entities.Niveau;
 import com.example.filRouge.service.concourService.concourService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,12 @@ public class ConcourController {
     public ResponseEntity<?> getConcours(@PathVariable("reference") String reference) {
         Concour concours = concourService.findByReference(reference);
         return new ResponseEntity<>(modelMapper.map(concours, ResponseConcour.class), HttpStatus.OK);
+    }
+
+    @GetMapping("/Filiere/{filiere}/{niveau}")
+    public ResponseEntity<?> getAllConcoursByFiliere(@PathVariable("filiere") String filiere,@PathVariable("niveau") String niveau) {
+        List<Concour> concours = concourService.findByRefFiliereAndNiveau(Filiere.builder().label(filiere).build(), Niveau.valueOf(niveau));
+        return new ResponseEntity<>(concours.stream().map(f->modelMapper.map(f, ResponseConcour.class)).toList(), HttpStatus.OK);
     }
 
     @PostMapping("/")
