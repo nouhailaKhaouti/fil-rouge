@@ -58,29 +58,21 @@ public class ResultServiceImpl implements ResultService {
     }
     @Override
     public Result updateResultOral(Result result) {
-        Result result1=resultRepository.findByResultRef(result);
-        if(result1==null){
-            throw  new NotFoundException();
-        }
+        Result result1=searchResult(result);
         result1.setNoteOral(result.getNoteOral());
         return resultRepository.save(result1);
     }
 
     @Override
     public Result preselectionResult(Result result) {
-        Result result1=resultRepository.findByResultRef(result);
-        if(result1==null){
-            throw  new NotFoundException();
-        }        result1.setPreselectione(true);
+        Result result1=searchResult(result);
+        result1.setPreselectione(true);
         return resultRepository.save(result1);
     }
 
     @Override
     public Result writingResult(Result result) {
-        Result result1=resultRepository.findByResultRef(result);
-        if(result1==null){
-            throw  new NotFoundException();
-        }
+        Result result1=searchResult(result);
         if(result1.isPreselectione()){
             result1.setRetenueOral(true);
             return resultRepository.save(result1);
@@ -90,10 +82,7 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public Result admisResult(Result result) {
-        Result result1=resultRepository.findByResultRef(result);
-        if(result1==null){
-            throw  new NotFoundException();
-        }
+        Result result1=searchResult(result);
         if(result1.isPreselectione() && result.isRetenueOral()){
             result1.setAdmis(true);
             return resultRepository.save(result1);
@@ -103,10 +92,7 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public Result addModuleNote(Result result) {
-        Result result1=resultRepository.findByChoix(result.getChoix());
-        if(result1==null){
-            throw new NotFoundException();
-        }
+         Result result1=searchResult(result);
         final Double[] resultWriting = {0.0};
 
         result.getNoteModules().forEach(noteModule -> {
@@ -121,12 +107,16 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public void DeleteResult(Result result) {
+
+        resultRepository.delete(searchResult(result));
+    }
+
+    public Result searchResult(Result result){
         Result result1=resultRepository.findByResultRef(result);
         if(result1==null){
             throw new NotFoundException();
         }
-        resultRepository.delete(result1);
+        return result1;
     }
-
 
 }

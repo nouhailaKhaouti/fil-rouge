@@ -7,10 +7,8 @@ import com.example.filRouge.entities.Inscription;
 import com.example.filRouge.entities.Result;
 import com.example.filRouge.exception.AlreadyExistException;
 import com.example.filRouge.exception.CustomException;
-import com.example.filRouge.exception.NotFoundException;
 import com.example.filRouge.service.Result.ResultService;
 import com.example.filRouge.service.concourService.concourService;
-import com.example.filRouge.service.semestreService.SemestreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -59,22 +57,28 @@ public class ChoixServiceImpl implements ChoixService {
         return choixNew;
     }
 
-    public Choix findByInscriptionAndConcours(Inscription inscription,Concour concour){
-        return choixRepository.findByInscriptionAndConcour(inscription,concour);
+    @Override
+    public Choix findByInscriptionAndConcours(Inscription inscription, Concour concour){
+        Concour concour1=concourService.findByReference(concour.getReference());
+        return choixRepository.findByInscriptionAndConcour(inscription,concour1);
     }
 
+    @Override
    public List<Inscription> findByConcours(Concour concour){
        return  choixRepository.findByConcour(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
    }
 
+   @Override
    public  List<Inscription> PeselectionListByConcours(Concour concour){
         return choixRepository.findChoixWithInscriptionByConcourAndPreselection(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
    }
 
+   @Override
     public  List<Inscription> WritingListByConcours(Concour concour){
         return choixRepository.findChoixWithInscriptionByConcourAndWriting(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
     }
 
+    @Override
     public  List<Inscription> AdmisListByConcours(Concour concour){
         return choixRepository.findChoixWithInscriptionByConcourAndAdmis(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
     }
