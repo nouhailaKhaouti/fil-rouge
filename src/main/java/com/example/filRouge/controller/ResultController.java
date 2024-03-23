@@ -57,6 +57,7 @@ public class ResultController {
     public ResponseEntity<?> updatePreselection( @RequestBody() List<updateResult> resultRequest) {
         resultRequest.stream().map(f->modelMapper.map(f, Result.class)).forEach(
                 f->{
+                    f.setPreselectione(true);
                     resultService.preselectionResult(searchResult(f));
                 }
         );
@@ -71,14 +72,12 @@ public class ResultController {
     @PutMapping("/writing")
     public ResponseEntity<?> updateWriting(@RequestBody List<updateResult> resultRequest){
 
-        // Perform the result updates
         resultRequest.stream()
                 .map(f -> modelMapper.map(f, Result.class))
-                .forEach(f -> resultService.writingResult(searchResult(f)));
+                .forEach(f -> {
+                    f.setRetenueOral(true);
+                    resultService.writingResult(searchResult(f));});
 
-
-
-        // Return the response
         return ResponseEntity.ok(resultRequest);
     }
 
@@ -86,6 +85,7 @@ public class ResultController {
     public ResponseEntity<?> updateAdmis( @RequestBody() List<updateResult>  resultRequest) {
         resultRequest.stream().map(f->modelMapper.map(f, Result.class)).forEach(
                 f->{
+                    f.setAdmis(true);
                     resultService.admisResult(searchResult(f));
                 }
         );

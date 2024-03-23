@@ -34,11 +34,11 @@ public class ChoixServiceImpl implements ChoixService {
             throw new AlreadyExistException();
         }
 
-        if(choix.getInscription().getNiveau().equals(concour.getNiveau())) {
+        if(!choix.getInscription().getNiveau().equals(concour.getNiveau())) {
             throw new CustomException("you can't have this choice as it's for an other type of applications", HttpStatus.BAD_REQUEST);
         }
 
-        if(choixRepository.countChoixByInscription(choix.getInscription())>3){
+        if(choixRepository.countChoixByInscription(choix.getInscription())>=3){
             throw new CustomException("you can't have more then three choices", HttpStatus.BAD_REQUEST);
         }
 
@@ -47,14 +47,16 @@ public class ChoixServiceImpl implements ChoixService {
             resultPreselection[0] += diplome.getNote();
         });
 
+        choix.setConcour(concour);
         Choix choixNew=choixRepository.save(choix);
 
         String locationAbbreviation = choix.getConcour().getReference().toUpperCase();
         String formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yy"));
         String generatedName = locationAbbreviation + "-" + formattedDate;
-        resultService.saveResult(Result.builder().notePreselection(resultPreselection[0]/choix.getInscription().getDiplomes().size()).choix(choixNew).resultRef(generatedName).build());
+        Result result=resultService.saveResult(Result.builder().notePreselection(resultPreselection[0]/choix.getInscription().getDiplomes().size()).choix(choixNew).resultRef(generatedName).build());
+        choixNew.setResult(result);
 
-        return choixNew;
+        return choixRepository.save(choixNew);
     }
 
     @Override

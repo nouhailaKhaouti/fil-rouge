@@ -36,6 +36,7 @@ public class InscriptionController {
 
     @PostMapping("/")
     public ResponseEntity<?> addInscription( @RequestBody() requestInscription requestInscription ) {
-        return ResponseEntity.ok(inscriptionService.create(modelMapper.map(requestInscription, Inscription.class)));
+        Inscription inscription=inscriptionService.create(modelMapper.map(requestInscription, Inscription.class));
+        return new ResponseEntity<>(inscription, HttpStatus.OK);
     }
 }

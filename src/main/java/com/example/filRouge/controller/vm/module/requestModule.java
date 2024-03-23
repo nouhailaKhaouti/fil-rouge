@@ -12,5 +12,7 @@ public class requestModule {
     private String reference;
     private concourWithReferenceOnly concour;
 
+    @NotNull(message = "the coef can't be null")
+    @NotBlank(message = "the coef can't be blank")
     private Integer coef;
 }

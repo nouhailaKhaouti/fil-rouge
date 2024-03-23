@@ -7,7 +7,4 @@ import lombok.Data;
 public class updateResult {
 
     private choixWithConcoursAndInscription choix;
-    private boolean preselectione;
-    private boolean retenueOral;
-    private boolean admis;
 }
