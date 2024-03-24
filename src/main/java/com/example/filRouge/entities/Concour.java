@@ -1,5 +1,8 @@
 package com.example.filRouge.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +20,7 @@ import static jakarta.persistence.TemporalType.DATE;
 @Builder
 public class Concour {
     @OneToMany(mappedBy = "concour",cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Module> modules;
 
     @Id
@@ -37,9 +41,11 @@ public class Concour {
     private Integer nbreplaceConcoursOral;
 
     @ManyToOne
+    @JsonBackReference
     private Member createdBY;
 
     @ManyToOne
+    @JsonBackReference
     private Filiere filiere;
 
     @Enumerated(EnumType.STRING)

@@ -1,5 +1,6 @@
 package com.example.filRouge.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,5 +22,6 @@ public class Filiere {
     private Departement departement;
 
     @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<Concour> concourList;
 }

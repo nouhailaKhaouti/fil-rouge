@@ -1,5 +1,6 @@
 package com.example.filRouge.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,5 +20,6 @@ public class Departement {
     private Long id;
     private String label;
     @OneToMany(cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Filiere> filieres;
 }

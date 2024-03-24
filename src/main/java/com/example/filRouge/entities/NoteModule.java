@@ -1,5 +1,6 @@
 package com.example.filRouge.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +15,7 @@ public class NoteModule {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne(cascade = CascadeType.REMOVE)
+    @JsonBackReference
     private Result result;
     private String refModuleConcours;
     private double note;

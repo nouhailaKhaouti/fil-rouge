@@ -1,5 +1,6 @@
 package com.example.filRouge.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,5 +18,6 @@ public class Module {
     private Long id;
     private String reference;
     @ManyToOne
+    @JsonBackReference
     private Concour concour;
 }

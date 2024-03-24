@@ -1,5 +1,7 @@
 package com.example.filRouge.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,9 +20,11 @@ import static jakarta.persistence.TemporalType.DATE;
 
 public class Inscription {
     @OneToMany(mappedBy = "inscription", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Diplome> diplomes;
 
     @OneToMany(mappedBy = "inscription", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Choix> choixs;
 
     @Id

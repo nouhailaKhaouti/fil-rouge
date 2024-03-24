@@ -2,6 +2,7 @@ package com.example.filRouge.service.Result;
 
 
 import com.example.filRouge.Repository.ResultRepository;
+import com.example.filRouge.entities.NoteModule;
 import com.example.filRouge.entities.Result;
 import com.example.filRouge.exception.AlreadyExistException;
 import com.example.filRouge.exception.CustomException;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,15 +96,25 @@ public class ResultServiceImpl implements ResultService {
     public Result addModuleNote(Result result) {
          Result result1=searchResult(result);
         final Double[] resultWriting = {0.0};
-
+        List<NoteModule> noteModules=new ArrayList<>();
         result.getNoteModules().forEach(noteModule -> {
-            resultWriting[0]+= noteModule.getNote();
-            noteModule.setResult(result1);
-            noteModuleService.saveNoteModule(noteModule);
+            result.getChoix().getConcour().getModules().forEach(module -> {
+                if(module.getReference().equals(noteModule.getRefModuleConcours())) {
+                    NoteModule noteModule1=noteModuleService.findByResultAndRefModuleConcours(result1,noteModule.getRefModuleConcours());
+                    resultWriting[0] += noteModule.getNote() * module.getCoefModule();
+                    if(noteModule1==null) {
+                        noteModule.setResult(result1);
+                        noteModules.add(noteModuleService.saveNoteModule(noteModule));
+                    }else{
+                        noteModule1.setNote(noteModule.getNote());
+                        noteModuleService.saveNoteModule(noteModule1);
+                    }
+                }
+            });
         });
-        result1.setNoteModules(result.getNoteModules());
+        result1.setNoteModules(noteModules);
         result1.setNoteEcrit(resultWriting[0]/result.getNoteModules().size());
-        return saveResult(result1);
+        return resultRepository.save(result1);
     }
 
     @Override
@@ -112,7 +124,7 @@ public class ResultServiceImpl implements ResultService {
     }
 
     public Result searchResult(Result result){
-        Result result1=resultRepository.findByResultRef(result);
+        Result result1=resultRepository.findByChoix(result.getChoix());
         if(result1==null){
             throw new NotFoundException();
         }
