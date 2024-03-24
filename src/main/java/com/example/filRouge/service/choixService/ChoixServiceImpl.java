@@ -26,7 +26,8 @@ public class ChoixServiceImpl implements ChoixService {
     final private ResultService resultService;
     @Override
     public Choix create(Choix choix) {
-        Concour concour=concourService.findByReference(choix.getConcour().getReference());
+        Concour concour=this.findConcour(choix.getConcour());
+
         if(LocalDate.now().isAfter(concour.getDateConcoursEcrit().minusDays(3))){
             throw  new CustomException("you can't register , the deathline is over", HttpStatus.BAD_REQUEST);
         }
@@ -61,34 +62,66 @@ public class ChoixServiceImpl implements ChoixService {
 
     @Override
     public Choix findByInscriptionAndConcours(Inscription inscription, Concour concour){
-        Concour concour1=concourService.findByReference(concour.getReference());
+        Concour concour1=this.findConcour(concour);
         return choixRepository.findByInscriptionAndConcour(inscription,concour1);
     }
 
     @Override
-   public List<Inscription> findByConcours(Concour concour){
-       return  choixRepository.findByConcour(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
+   public List<Inscription> findByConcours(Concour c){
+        Concour concour=this.findConcour(c);
+        return  choixRepository.findByConcour(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
    }
 
    @Override
-   public  List<Inscription> PeselectionListByConcours(Concour concour){
-        return choixRepository.findChoixWithInscriptionByConcourAndPreselection(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
+   public  List<Inscription> PeselectionListByConcours(Concour c){
+       Concour concour=this.findConcour(c);
+       return choixRepository.findChoixWithInscriptionByConcourAndPreselection(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
    }
 
    @Override
-    public  List<Inscription> WritingListByConcours(Concour concour){
-        return choixRepository.findChoixWithInscriptionByConcourAndWriting(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
+    public  List<Inscription> WritingListByConcours(Concour c){
+       Concour concour=this.findConcour(c);
+       return choixRepository.findChoixWithInscriptionByConcourAndWriting(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
     }
 
     @Override
-    public  List<Inscription> AdmisListByConcours(Concour concour){
+    public  List<Inscription> AdmisListByConcours(Concour c){
+        Concour concour=this.findConcour(c);
         return choixRepository.findChoixWithInscriptionByConcourAndAdmis(concour).stream().map(Choix::getInscription).collect(Collectors.toList());
+    }
+
+    @Override
+    public  boolean countPeselectionListByConcours(Concour c){
+        Concour concour=this.findConcour(c);
+        return choixRepository.countChoixWithInscriptionByConcourAndPreselection(concour) < concour.getNbreplaceConcoursEcrit();
+
+    }
+
+    @Override
+    public  Boolean countWritingListByConcours(Concour c){
+        Concour concour=this.findConcour(c);
+        return choixRepository.countChoixWithInscriptionByConcourAndWriting(concour) < concour.getNbreplaceConcoursOral();
+
+    }
+
+    @Override
+    public  Boolean countAdmisListByConcours(Concour c){
+        Concour concour=this.findConcour(c);
+        return choixRepository.countChoixWithInscriptionByConcourAndAdmis(concour) < concour.getNbreplace();
     }
     @Override
     public void delete(Choix choix) {
         choixRepository.delete(choix);
     }
 
+
+    public Concour findConcour(Concour c){
+        Concour concour=concourService.findByReference(c.getReference());
+        if(concour==null){
+            throw  new CustomException("there's no exam that match this reference "+c.getReference(), HttpStatus.BAD_REQUEST);
+        }
+        return concour;
+    }
 
 
 }

@@ -57,8 +57,10 @@ public class ResultController {
     public ResponseEntity<?> updatePreselection( @RequestBody() List<updateResult> resultRequest) {
         resultRequest.stream().map(f->modelMapper.map(f, Result.class)).forEach(
                 f->{
-                    f.setPreselectione(true);
-                    resultService.preselectionResult(searchResult(f));
+                    if(choixService.countPeselectionListByConcours(f.getChoix().getConcour())) {
+                        f.setPreselectione(true);
+                        resultService.preselectionResult(searchResult(f));
+                    }
                 }
         );
         return ResponseEntity.ok(resultRequest);
@@ -75,8 +77,11 @@ public class ResultController {
         resultRequest.stream()
                 .map(f -> modelMapper.map(f, Result.class))
                 .forEach(f -> {
-                    f.setRetenueOral(true);
-                    resultService.writingResult(searchResult(f));});
+                    if(choixService.countWritingListByConcours(f.getChoix().getConcour())) {
+                        f.setRetenueOral(true);
+                        resultService.writingResult(searchResult(f));
+                    }
+                });
 
         return ResponseEntity.ok(resultRequest);
     }
@@ -85,8 +90,11 @@ public class ResultController {
     public ResponseEntity<?> updateAdmis( @RequestBody() List<updateResult>  resultRequest) {
         resultRequest.stream().map(f->modelMapper.map(f, Result.class)).forEach(
                 f->{
-                    f.setAdmis(true);
-                    resultService.admisResult(searchResult(f));
+                    if(choixService.countAdmisListByConcours(f.getChoix().getConcour())) {
+
+                        f.setAdmis(true);
+                        resultService.admisResult(searchResult(f));
+                    }
                 }
         );
         return ResponseEntity.ok(resultRequest);

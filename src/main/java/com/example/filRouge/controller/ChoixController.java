@@ -36,51 +36,44 @@ public class ChoixController {
 
     @GetMapping("/{reference}")
     public ResponseEntity<?> getAllChoixByConcour(@PathVariable("reference") String reference) {
-        Concour concours = concourService.findByReference(reference);
-        List<Inscription> inscriptions = choixService.findByConcours(concours);
+        List<Inscription> inscriptions = choixService.findByConcours(Concour.builder().reference(reference).build());
         // Asynchronously generate the PDF
         return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, requestInscription.class)).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/pdf/preselection/{reference}")
     public void getAllChoixByConcourPreselectionPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws IOException {
-        Concour concours = concourService.findByReference(reference);
-        List<Inscription> inscriptions = choixService.PeselectionListByConcours(concours);
+        List<Inscription> inscriptions = choixService.PeselectionListByConcours(Concour.builder().reference(reference).build());
         generatePDF(response,inscriptions,"Preselection List for "+reference);
     }
 
     @GetMapping("/pdf/writing/{reference}")
     public void getAllChoixByConcourWritingPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws IOException {
-        Concour concours = concourService.findByReference(reference);
-        List<Inscription> inscriptions = choixService.WritingListByConcours(concours);
+        List<Inscription> inscriptions = choixService.WritingListByConcours(Concour.builder().reference(reference).build());
         generatePDF(response,inscriptions,"Writing Exam List for "+reference);
     }
 
     @GetMapping("/pdf/admis/{reference}")
     public void getAllChoixByConcourAdmisPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws IOException {
-        Concour concours = concourService.findByReference(reference);
-        List<Inscription> inscriptions = choixService.AdmisListByConcours(concours);
+        List<Inscription> inscriptions = choixService.AdmisListByConcours(Concour.builder().reference(reference).build());
         generatePDF(response,inscriptions,"Final list for "+reference);
     }
 
     @GetMapping("/preselection/{reference}")
     public ResponseEntity<?> getAllChoixByConcourPreselection(@PathVariable("reference") String reference) {
-        Concour concours = concourService.findByReference(reference);
-        List<Inscription> inscriptions = choixService.PeselectionListByConcours(concours);
+        List<Inscription> inscriptions = choixService.PeselectionListByConcours(Concour.builder().reference(reference).build());
         return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, respondeInscription.class)).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/writing/{reference}")
     public ResponseEntity<?> getAllChoixByConcourWriting(@PathVariable("reference") String reference) {
-        Concour concours = concourService.findByReference(reference);
-        List<Inscription> inscriptions = choixService.WritingListByConcours(concours);
+        List<Inscription> inscriptions = choixService.WritingListByConcours(Concour.builder().reference(reference).build());
         return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, respondeInscription.class)).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/admis/{reference}")
     public ResponseEntity<?> getAllChoixByConcourAdmis(@PathVariable("reference") String reference){
-        Concour concours = concourService.findByReference(reference);
-        List<Inscription> inscriptions = choixService.AdmisListByConcours(concours);
+        List<Inscription> inscriptions = choixService.AdmisListByConcours(Concour.builder().reference(reference).build());
         return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, respondeInscription.class)).toList(), HttpStatus.OK);
     }
 

@@ -29,4 +29,12 @@ public interface ChoixRepository extends JpaRepository<Choix, Long> {
   @Query("SELECT ch FROM Choix ch JOIN FETCH ch.inscription ins JOIN FETCH ch.result r WHERE ch.concour = :concour AND r.admis = true")
   List<Choix> findChoixWithInscriptionByConcourAndAdmis(@Param("concour") Concour concour);
 
+  @Query("SELECT count(ch) FROM Choix ch JOIN FETCH ch.inscription ins JOIN FETCH ch.result r WHERE ch.concour = :concour AND r.preselectione = true")
+  Integer countChoixWithInscriptionByConcourAndPreselection(@Param("concour") Concour concour);
+
+  @Query("SELECT count(ch) FROM Choix ch JOIN FETCH ch.inscription ins JOIN FETCH ch.result r WHERE ch.concour = :concour AND r.retenueOral = true")
+  Integer countChoixWithInscriptionByConcourAndWriting(@Param("concour") Concour concour);
+  @Query("SELECT count(ch)FROM Choix ch JOIN FETCH ch.inscription ins JOIN FETCH ch.result r WHERE ch.concour = :concour AND r.admis = true")
+  Integer countChoixWithInscriptionByConcourAndAdmis(@Param("concour") Concour concour);
+
 }

@@ -24,6 +24,12 @@ public interface ChoixService {
 
     List<Inscription> AdmisListByConcours(Concour concour);
 
+    boolean countPeselectionListByConcours(Concour concour);
+
+    Boolean countWritingListByConcours(Concour concour);
+
+    Boolean countAdmisListByConcours(Concour concour);
+
     void delete(Choix Choix);
 
 /*    Choix findByInscriptionAndConcour(Choix Choix);
