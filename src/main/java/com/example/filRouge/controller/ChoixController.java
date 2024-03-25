@@ -37,29 +37,29 @@ public class ChoixController {
     @GetMapping("/{reference}")
     public ResponseEntity<?> getAllChoixByConcour(@PathVariable("reference") String reference) {
         List<Inscription> inscriptions = choixService.findByConcours(Concour.builder().reference(reference).build());
-        return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, requestInscription.class)).toList(), HttpStatus.OK);
+        return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, respondeInscription.class)).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/pdf/preselection/{reference}")
-    public ResponseEntity<?> getAllChoixByConcourPreselectionPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws Exception {
+    public ResponseEntity<?> getAllChoixByConcourPreselectionPdf(@PathVariable("reference") String reference) throws Exception {
         List<Inscription> inscriptions = choixService.PeselectionListByConcours(Concour.builder().reference(reference).build());
         return generateTicket(inscriptions,"Preselection Student");
     }
 
     @GetMapping("/pdf/all/{reference}")
-    public ResponseEntity<?> getAllChoixByConcourAllPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws Exception {
+    public ResponseEntity<?> getAllChoixByConcourAllPdf(@PathVariable("reference") String reference) throws Exception {
         List<Inscription> inscriptions = choixService.findByConcours(Concour.builder().reference(reference).build());
         return generateTicket(inscriptions,"All Student");
     }
 
     @GetMapping("/pdf/writing/{reference}")
-    public ResponseEntity<?> getAllChoixByConcourWritingPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws Exception {
+    public ResponseEntity<?> getAllChoixByConcourWritingPdf(@PathVariable("reference") String reference) throws Exception {
         List<Inscription> inscriptions = choixService.WritingListByConcours(Concour.builder().reference(reference).build());
         return generateTicket(inscriptions,"STUDENT Approved To Pass The Oral exam");
     }
 
     @GetMapping("/pdf/admis/{reference}")
-    public ResponseEntity<?> getAllChoixByConcourAdmisPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws Exception {
+    public ResponseEntity<?> getAllChoixByConcourAdmisPdf(@PathVariable("reference") String reference) throws Exception {
         List<Inscription> inscriptions = choixService.AdmisListByConcours(Concour.builder().reference(reference).build());
         return generateTicket(inscriptions,"STUDENT Accepted");
     }

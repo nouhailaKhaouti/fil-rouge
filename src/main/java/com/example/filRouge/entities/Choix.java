@@ -1,5 +1,7 @@
 package com.example.filRouge.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,10 +18,13 @@ public class Choix {
     private Long id;
     private Integer numChoix;
     @ManyToOne
+    @JsonBackReference
     private Inscription inscription;
     @ManyToOne
+    @JsonBackReference
     private Concour concour;
 
     @OneToOne(cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private Result result;
 }
