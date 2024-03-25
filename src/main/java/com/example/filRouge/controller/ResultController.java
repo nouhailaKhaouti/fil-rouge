@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("FilRouge/api/result")
-@PreAuthorize("hasRole('MANAGER')")
+@PreAuthorize("hasRole('MANAGER') AND hasRole('PROF')")
 public class ResultController {
     final private ResultService resultService;
     final private ChoixService choixService;

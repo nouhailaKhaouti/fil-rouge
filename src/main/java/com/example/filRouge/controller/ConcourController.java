@@ -20,18 +20,21 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("FilRouge/api/concour")
-@PreAuthorize("hasRole('MANAGER')")
+
 public class ConcourController {
     final private concourService concourService;
 
     final ModelMapper modelMapper;
 
+
+    @PreAuthorize("hasRole('MANAGER') AND hasRole('PROF')")
     @GetMapping("/")
     public ResponseEntity<?> getAllConcours() {
         List<Concour> concours = concourService.findAll();
         return new ResponseEntity<>(concours.stream().map(f->modelMapper.map(f, ResponseConcour.class)).toList(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MANAGER') AND hasRole('PROF')")
     @GetMapping("/{reference}")
     public ResponseEntity<?> getConcours(@PathVariable("reference") String reference) {
         Concour concours = concourService.findByReference(reference);
@@ -44,6 +47,7 @@ public class ConcourController {
         return new ResponseEntity<>(concours.stream().map(f->modelMapper.map(f, ResponseConcour.class)).toList(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('MANAGER') AND hasRole('PROF')")
     @PostMapping("/")
     public ResponseEntity<?> addConcour( @RequestBody() requestConcour concour) {
         Concour concour1=modelMapper.map(concour, Concour.class);

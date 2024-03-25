@@ -31,14 +31,12 @@ public class DepartementController {
         List<Departement> departements = departementService.findAll();
         return new ResponseEntity<>(departements.stream().map(f->modelMapper.map(f, DepartementVm.class)).toList(), HttpStatus.OK);
     }
-    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/")
     public ResponseEntity<?> addDepartement(@Valid  @RequestBody() DepartementVm requestdepartement)  {
             Departement departement=modelMapper.map(requestdepartement,Departement.class);
             return ResponseEntity.ok(departementService.create(departement));
     }
 
-    @PreAuthorize("hasRole('MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateDepartement(@PathVariable("id") long id, @RequestBody() Departement departement) {
             departement.setId(id);
@@ -46,7 +44,6 @@ public class DepartementController {
             return new ResponseEntity<>(addedDepartement, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{label}")
     public ResponseEntity<?> deleteDepartement(@PathVariable("label") String label) {
             Departement departement= Departement.builder().label(label).build();

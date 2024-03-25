@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("FilRouge/api/module")
-@PreAuthorize("hasRole('MANAGER')")
+@PreAuthorize("hasRole('MANAGER') AND hasRole('PROF')")
 public class ModuleController {
 
     final private moduleService moduleService;
@@ -24,7 +24,6 @@ public class ModuleController {
 
     final ModelMapper modelMapper;
 
-    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/")
     public ResponseEntity<?> addModule(@Valid @RequestBody() requestModule requestModule){
         Module module=modelMapper.map(requestModule,Module.class);
@@ -32,7 +31,6 @@ public class ModuleController {
         return ResponseEntity.ok(moduleService.saveModule(module));
     }
 
-    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{reference}")
     public ResponseEntity<?> deleteModule(@PathVariable("reference") String reference) {
         Module module= Module.builder().reference(reference).build();

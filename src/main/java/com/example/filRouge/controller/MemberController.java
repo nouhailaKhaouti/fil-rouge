@@ -31,14 +31,12 @@ public class MemberController {
 
     final ModelMapper modelMapper;
 
-    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/")
     public ResponseEntity<?> addMember(@Valid  @RequestBody() requestMember requestmember) throws MessagingException, IOException {
             Member member=modelMapper.map(requestmember,Member.class);
             return ResponseEntity.ok(memberService.create(member));
     }
 
-    @PreAuthorize("hasRole('MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateMember(@PathVariable("id") long id, @RequestBody() Member member) {
             member.setId(id);
@@ -46,7 +44,6 @@ public class MemberController {
             return new ResponseEntity<>(addedMember, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('MANAGER')")
     @PutMapping("/{role}/{num}")
     public ResponseEntity<?> updateMemberRole(@PathVariable("role") String role, @PathVariable("num") Integer member) {
         Role newRole=Role.valueOf(role);
@@ -55,7 +52,6 @@ public class MemberController {
     }
 
 
-    @PreAuthorize("hasRole('MANAGER')")
     @PutMapping("/approve")
     public ResponseEntity<?> approveAccount( @RequestParam() Integer member) {
         return ResponseEntity.ok(memberService.approveAccount(member));
@@ -75,7 +71,6 @@ public class MemberController {
                 .build(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{num}")
     public ResponseEntity<?> deleteMember(@PathVariable("num") Integer num) {
             Member member= Member.builder().num(num).build();

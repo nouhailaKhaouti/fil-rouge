@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("FilRouge/api/filiere")
-@PreAuthorize("hasRole('MANAGER')")
 public class FiliereController {
 
     final private filiereService filiereService;
