@@ -16,6 +16,12 @@ public interface ChoixService {
 
     Choix findByInscriptionAndConcours(Inscription inscription, Concour concour);
 
+    List<Inscription> PreselectionSeats(Concour c);
+
+    List<Inscription> OralSeats(Concour c);
+
+    List<Inscription> FinalSeats(Concour c);
+
     List<Inscription> findByConcours(Concour concour);
 
     List<Inscription> PeselectionListByConcours(Concour concour);

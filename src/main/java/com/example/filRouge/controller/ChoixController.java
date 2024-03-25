@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,6 @@ import java.util.List;
 @RequestMapping("FilRouge/api/choix")
 @PreAuthorize("hasRole('MANAGER')")
 public class ChoixController {
-    final private concourService concourService;
     final private ChoixService choixService;
 
     final ModelMapper modelMapper;
@@ -37,26 +37,31 @@ public class ChoixController {
     @GetMapping("/{reference}")
     public ResponseEntity<?> getAllChoixByConcour(@PathVariable("reference") String reference) {
         List<Inscription> inscriptions = choixService.findByConcours(Concour.builder().reference(reference).build());
-        // Asynchronously generate the PDF
         return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, requestInscription.class)).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/pdf/preselection/{reference}")
-    public void getAllChoixByConcourPreselectionPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> getAllChoixByConcourPreselectionPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws Exception {
         List<Inscription> inscriptions = choixService.PeselectionListByConcours(Concour.builder().reference(reference).build());
-        generatePDF(response,inscriptions,"Preselection List for "+reference);
+        return generateTicket(inscriptions,"Preselection Student");
+    }
+
+    @GetMapping("/pdf/all/{reference}")
+    public ResponseEntity<?> getAllChoixByConcourAllPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws Exception {
+        List<Inscription> inscriptions = choixService.findByConcours(Concour.builder().reference(reference).build());
+        return generateTicket(inscriptions,"All Student");
     }
 
     @GetMapping("/pdf/writing/{reference}")
-    public void getAllChoixByConcourWritingPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> getAllChoixByConcourWritingPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws Exception {
         List<Inscription> inscriptions = choixService.WritingListByConcours(Concour.builder().reference(reference).build());
-        generatePDF(response,inscriptions,"Writing Exam List for "+reference);
+        return generateTicket(inscriptions,"STUDENT Approved To Pass The Oral exam");
     }
 
     @GetMapping("/pdf/admis/{reference}")
-    public void getAllChoixByConcourAdmisPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> getAllChoixByConcourAdmisPdf(@PathVariable("reference") String reference,HttpServletResponse response) throws Exception {
         List<Inscription> inscriptions = choixService.AdmisListByConcours(Concour.builder().reference(reference).build());
-        generatePDF(response,inscriptions,"Final list for "+reference);
+        return generateTicket(inscriptions,"STUDENT Accepted");
     }
 
     @GetMapping("/preselection/{reference}")
@@ -77,6 +82,23 @@ public class ChoixController {
         return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, respondeInscription.class)).toList(), HttpStatus.OK);
     }
 
+    @GetMapping("/admisSeats/{reference}")
+    public ResponseEntity<?> getAllChoixByConcourAdmisSeats(@PathVariable("reference") String reference){
+        List<Inscription> inscriptions = choixService.FinalSeats(Concour.builder().reference(reference).build());
+        return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, respondeInscription.class)).toList(), HttpStatus.OK);
+    }
+
+    @GetMapping("/preselectionSeats/{reference}")
+    public ResponseEntity<?> getAllChoixByConcourPreselectionSeats(@PathVariable("reference") String reference){
+        List<Inscription> inscriptions = choixService.PreselectionSeats(Concour.builder().reference(reference).build());
+        return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, respondeInscription.class)).toList(), HttpStatus.OK);
+    }
+    @GetMapping("/oralSeats/{reference}")
+    public ResponseEntity<?> getAllChoixByConcourOralSeats(@PathVariable("reference") String reference){
+        List<Inscription> inscriptions = choixService.OralSeats(Concour.builder().reference(reference).build());
+        return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, respondeInscription.class)).toList(), HttpStatus.OK);
+    }
+
     public void generatePDF(HttpServletResponse response, List<Inscription> inscriptions,String title)throws DocumentException, IOException {
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -90,4 +112,13 @@ public class ChoixController {
         exporter.export(response,title);
     }
 
+    public ResponseEntity<?> generateTicket(List<Inscription> inscriptions,String title) throws Exception {
+        try {
+            byte[] pdfBytes = studentPdf.generateTicketPdf(inscriptions,title);
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }

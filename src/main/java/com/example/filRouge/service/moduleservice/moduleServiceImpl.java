@@ -45,7 +45,7 @@ public class moduleServiceImpl implements moduleService{
 
     @Override
     public Module saveModule(Module module) {
-        Optional<Module> OptionalModule=moduleRepository.findByReference(module.getReference());
+        Optional<Module> OptionalModule=moduleRepository.findByReferenceAndConcour(module.getReference(),module.getConcour());
         if(OptionalModule.isPresent()){
             throw new AlreadyExistException();
         }

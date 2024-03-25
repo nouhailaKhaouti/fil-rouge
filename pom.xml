@@ -9,11 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>Aftas</artifactId>
+    <artifactId>FilRouge</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
-    <name>Aftas</name>
-    <description>Aftas</description>
+    <packaging>jar</packaging>
+    <name>FilRouge</name>
+    <description>FilRouge</description>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -76,6 +76,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>6.17.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.librepdf</groupId>

@@ -2,13 +2,21 @@ package com.example.filRouge.helpers.pdf;
 
 import com.example.filRouge.entities.Inscription;
 import java.awt.Color;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 @RequiredArgsConstructor
 public class studentPdf {
@@ -75,6 +83,29 @@ public class studentPdf {
         document.add(table);
 
         document.close();
+    }
 
+    public static byte[] generateTicketPdf(List<Inscription> inscriptionsList,String title) throws Exception {
+        // Load the JasperReport template from resources
+        InputStream templateStream = studentPdf.class.getClassLoader().getResourceAsStream("inscriptionList.jrxml");
+        if (templateStream == null)
+            throw new FileNotFoundException("Template not found in the classpath");
+
+        JasperDesign jasperDesign = JRXmlLoader.load(templateStream);
+
+        // Compile the JasperReport template
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+
+        // Prepare parameters
+        Map<String, Object> parameters = new HashMap<>();
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(inscriptionsList);
+        parameters.put("inscriptionsList", dataSource);
+        parameters.put("title", title);
+
+        // Fill the report
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
+
+        // Export to PDF
+        return JasperExportManager.exportReportToPdf(jasperPrint);
     }
 }

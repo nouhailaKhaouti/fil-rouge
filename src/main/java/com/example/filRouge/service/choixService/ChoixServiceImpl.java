@@ -10,6 +10,7 @@ import com.example.filRouge.exception.CustomException;
 import com.example.filRouge.service.Result.ResultService;
 import com.example.filRouge.service.concourService.concourService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +65,25 @@ public class ChoixServiceImpl implements ChoixService {
     public Choix findByInscriptionAndConcours(Inscription inscription, Concour concour){
         Concour concour1=this.findConcour(concour);
         return choixRepository.findByInscriptionAndConcour(inscription,concour1);
+    }
+
+
+    @Override
+    public  List<Inscription> PreselectionSeats(Concour c){
+        Concour concour=this.findConcour(c);
+        return choixRepository.findChoixWithInscriptionByConcourAndPreselectionNbrPlace(concour, PageRequest.of(0, concour.getNbreplaceConcoursEcrit())).stream().map(Choix::getInscription).collect(Collectors.toList());
+    }
+
+    @Override
+    public  List<Inscription> OralSeats(Concour c){
+        Concour concour=this.findConcour(c);
+        return choixRepository.findChoixWithInscriptionByConcourAndWritingNbrPlace(concour, PageRequest.of(0, concour.getNbreplaceConcoursOral())).stream().map(Choix::getInscription).collect(Collectors.toList());
+    }
+
+    @Override
+    public  List<Inscription> FinalSeats(Concour c){
+        Concour concour=this.findConcour(c);
+        return choixRepository.findChoixWithInscriptionByConcourAndPreselectionNbrPlace(concour, PageRequest.of(0, concour.getNbreplace())).stream().map(Choix::getInscription).collect(Collectors.toList());
     }
 
     @Override

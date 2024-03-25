@@ -13,4 +13,5 @@ public interface ModuleRepository extends JpaRepository<Module, Long> {
 
     List<Module> findByConcour(Concour concour);
     Optional<Module> findByReference(String reference);
+    Optional<Module> findByReferenceAndConcour(String reference,Concour concour);
 }

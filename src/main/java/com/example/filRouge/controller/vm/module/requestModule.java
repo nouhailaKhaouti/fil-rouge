@@ -14,5 +14,5 @@ public class requestModule {
 
     @NotNull(message = "the coef can't be null")
     @NotBlank(message = "the coef can't be blank")
-    private Integer coef;
+    private Integer coefModule;
 }

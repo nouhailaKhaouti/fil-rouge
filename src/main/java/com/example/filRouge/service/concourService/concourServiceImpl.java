@@ -76,14 +76,14 @@ public class concourServiceImpl implements concourService{
         });
 
         if(concours.getDateConcoursEcrit().isAfter(LocalDate.now().plusDays(7)) ){
-            if(concours.getDateConcoursEcrit().isAfter(concours.getDateConcoursOral())) {
+            if(concours.getDateConcoursEcrit().isBefore(concours.getDateConcoursOral())) {
                 concours.setFiliere(filiereService.findByLabel(concours.getFiliere().getLabel()));
+                concours.setCreatedAt(LocalDate.now());
                 Concour concoursNew = concourRepository.save(concours);
                 concoursNew.getModules().forEach(module -> {
                     module.setConcour(concoursNew);
                     moduleService.saveModule(module);
                 });
-
                 return concoursNew;
             }
             throw new CustomException("the oral exam day can't be before the writing exam Date", HttpStatus.BAD_REQUEST);
