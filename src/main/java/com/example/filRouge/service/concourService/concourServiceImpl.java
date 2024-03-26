@@ -68,8 +68,8 @@ public class concourServiceImpl implements concourService{
         List<Concour> concourList=findByCreteria(concours.getFiliere().getLabel(),concours.getAnneeConcours());
         concourList.forEach(concour -> {
             if(concours.getNiveau().equals(concour.getNiveau())) {
-                if (concours.getDateConcoursEcrit().isAfter(concour.getDateConcoursEcrit()) &&
-                        concours.getDateConcoursEcrit().isBefore(concour.getDateConcoursOral())) {
+                if ((concours.getDateConcoursEcrit().isAfter(concour.getDateConcoursEcrit()) &&
+                        concours.getDateConcoursEcrit().isBefore(concour.getDateConcoursOral()))||(concours.getDateConcoursEcrit().equals(concour.getDateConcoursEcrit())) ||(concours.getDateConcoursOral().equals(concour.getDateConcoursOral()))) {
                     throw new CustomException("It look like there's an other exam  ", HttpStatus.BAD_REQUEST);
                 }
             }
