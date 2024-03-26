@@ -28,7 +28,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("FilRouge/api/choix")
+/*
 @PreAuthorize("hasRole('MANAGER') AND hasRole('PROF')")
+*/
 public class ChoixController {
     final private ChoixService choixService;
 
@@ -97,19 +99,6 @@ public class ChoixController {
     public ResponseEntity<?> getAllChoixByConcourOralSeats(@PathVariable("reference") String reference){
         List<Inscription> inscriptions = choixService.OralSeats(Concour.builder().reference(reference).build());
         return new ResponseEntity<>(inscriptions.stream().map(f->modelMapper.map(f, respondeInscription.class)).toList(), HttpStatus.OK);
-    }
-
-    public void generatePDF(HttpServletResponse response, List<Inscription> inscriptions,String title)throws DocumentException, IOException {
-        response.setContentType("application/pdf");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        String currentDateTime = dateFormatter.format(new Date());
-
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=student_" + currentDateTime + ".pdf";
-        response.setHeader(headerKey, headerValue);
-
-        studentPdf exporter = new studentPdf(inscriptions);
-        exporter.export(response,title);
     }
 
     public ResponseEntity<?> generateTicket(List<Inscription> inscriptions,String title) throws Exception {

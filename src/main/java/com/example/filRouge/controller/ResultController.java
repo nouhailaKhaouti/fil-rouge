@@ -2,6 +2,7 @@ package com.example.filRouge.controller;
 
 
 
+import com.example.filRouge.controller.vm.choix.choixWithConcoursAndInscription;
 import com.example.filRouge.controller.vm.result.resultRequest;
 import com.example.filRouge.controller.vm.result.resultRequestWithOralNote;
 import com.example.filRouge.controller.vm.result.updateResult;
@@ -21,7 +22,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("FilRouge/api/result")
+/*
 @PreAuthorize("hasRole('MANAGER') AND hasRole('PROF')")
+*/
 public class ResultController {
     final private ResultService resultService;
     final private ChoixService choixService;
@@ -54,12 +57,11 @@ public class ResultController {
     }
 
     @PutMapping("/preselection")
-    public ResponseEntity<?> updatePreselection( @RequestBody() List<updateResult> resultRequest) {
-        resultRequest.stream().map(f->modelMapper.map(f, Result.class)).forEach(
+    public ResponseEntity<?> updatePreselection( @RequestBody() List<choixWithConcoursAndInscription> resultRequest) {
+        resultRequest.stream().map(f->modelMapper.map(f, Choix.class)).forEach(
                 f->{
-                    if(choixService.countPeselectionListByConcours(f.getChoix().getConcour())) {
-                        f.setPreselectione(true);
-                        resultService.preselectionResult(searchResult(f));
+                    if(choixService.countPeselectionListByConcours(f.getConcour())) {
+                        resultService.preselectionResult(searchResult(Result.builder().choix(f).preselectione(true).build()));
                     }
                 }
         );

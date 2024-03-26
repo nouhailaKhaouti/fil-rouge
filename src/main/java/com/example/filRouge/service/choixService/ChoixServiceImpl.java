@@ -113,7 +113,7 @@ public class ChoixServiceImpl implements ChoixService {
     @Override
     public  boolean countPeselectionListByConcours(Concour c){
         Concour concour=this.findConcour(c);
-        return choixRepository.countChoixWithInscriptionByConcourAndPreselection(concour) < concour.getNbreplaceConcoursEcrit();
+        return choixRepository.countChoixWithInscriptionByConcourAndPreselection(concour.getId()) < concour.getNbreplaceConcoursEcrit();
 
     }
 
